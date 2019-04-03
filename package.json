@@ -1,0 +1,11 @@
+{
+  "name": "bcube",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.ts",
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "author": "MiladM",
+  "license": "ISC"
+}
