@@ -14,5 +14,9 @@ export class LabelController {
     getSwitchLabel() {
       return this.switchLabelNumber++;
     }
+
+    getLastLabel() {
+      return this.switchLabelNumber;
+    }
   }
   

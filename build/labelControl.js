@@ -12,6 +12,9 @@ var LabelController = /** @class */ (function () {
     LabelController.prototype.getSwitchLabel = function () {
         return this.switchLabelNumber++;
     };
+    LabelController.prototype.getLastLabel = function () {
+        return this.switchLabelNumber;
+    };
     return LabelController;
 }());
 exports.LabelController = LabelController;

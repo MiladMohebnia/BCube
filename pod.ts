@@ -11,7 +11,7 @@ export class Pod {
     public level: number,
     public connections: number,
     public labelC: LabelController,
-    masterLevel: boolean = true
+    public masterLevel: boolean = true
   ) {
     if (this.level > 0) {
       this.createSubPods();
@@ -21,8 +21,13 @@ export class Pod {
     }
     if (masterLevel) {
       this.createSwitches();
-      this.makeConnection();
+      let levelIndex: number = 0;
+      while (levelIndex <= this.level) {
+        this.makeConnectionOnLevel(levelIndex);
+        levelIndex++;
+      }
     }
+    // this.printNotConnected();
   }
 
   private createSubPods() {
@@ -54,39 +59,60 @@ export class Pod {
     }
   }
 
-  makeConnection() {
+  makeConnectionOnLevel(level: number) {
     if (this.level === 0) {
-        for(let node of this.nodeList) {
-            // console.log(
-            //     `about to connect ${this.switchList[0].label} to ${node.label}`
-            // );
-            
-            this.connect(this.switchList[0], node);
-        }
-        return;
-    }
-    for (let pod of this.subPodList) {
-        pod.makeConnection();
-    }
-    for(let index in this.switchList) {
+      for (let node of this.nodeList) {
+        this.connect(this.switchList[0], node);
+      }
+    } else if (this.level === level) {
+      for (let index in this.switchList) {
+        let numberedIndex = parseInt(index);
         let targetSwitch = this.switchList[index];
-        for(let pod of this.subPodList) {
-            this.connect(targetSwitch, pod.nth_node(index));
+        for (let pod of this.subPodList) {
+          this.connect(targetSwitch, pod.nth_node(numberedIndex));
         }
-        this.connect(, )
-        console.log(index);
-        
+      }
+    } else {
+      for (let pod of this.subPodList) {
+        pod.makeConnectionOnLevel(level);
+      }
     }
   }
 
-  connect(s:Switch, n: Node) {
-    console.log(s.label + ' ' + n.label+ ' ' + '1');
-    console.log(n.label + ' ' + s.label+ ' ' + '1');
+  connect(s: Switch, n: Node) {
+    n.connectionList.push(s.label);
+    s.connectionList.push(n.label);
+    console.log(s.label + " " + n.label + " " + "1");
+    console.log(n.label + " " + s.label + " " + "1");
   }
 
-  nth_node(n: number) {
+  nth_node(n: number): Node {
     if (this.level === 0) {
-        return this.nodeList[n];
+      return this.nodeList[n];
+    }
+    let eachPodNodeCount = Math.pow(this.connections, this.level);
+    let targetSubPodIndex =
+      n < eachPodNodeCount ? 0 : Math.floor(n / eachPodNodeCount);
+    let targetNodeIndex = n < eachPodNodeCount ? n : n % eachPodNodeCount;
+    return this.subPodList[targetSubPodIndex].nth_node(targetNodeIndex);
+  }
+
+  printNotConnected() {
+    if (this.level === 0) {
+      let targetSwitch: Switch = this.switchList[0];
+      console.log(this);
+      
+      let connectionList: number[] = targetSwitch.connectionList;
+      let lastLabel: number = targetSwitch.label;
+      for (let index = 0; index < lastLabel; index++) {
+        if (connectionList.indexOf(index)) continue;
+        console.log(targetSwitch.label + " " + index + " " + "999999");
+        console.log(index + " " + targetSwitch.label + " " + "999999");
+      }
+    } else {
+      for (let pod of this.subPodList) {
+        pod.printNotConnected();
+      }
     }
   }
 }
