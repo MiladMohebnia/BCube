@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 var LabelController = /** @class */ (function () {
     function LabelController(levels, connections) {
+        this.levels = levels;
+        this.connections = connections;
         this.nodeLabelNumber = 0;
         this.switchLabelNumber = 0;
         this.switchLabelNumber = Math.pow(connections, levels + 1);
@@ -14,6 +16,9 @@ var LabelController = /** @class */ (function () {
     };
     LabelController.prototype.getLastLabel = function () {
         return this.switchLabelNumber;
+    };
+    LabelController.prototype.getLastNodeLabel = function () {
+        return Math.pow(this.connections, this.levels + 1) - 1;
     };
     return LabelController;
 }());

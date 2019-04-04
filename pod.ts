@@ -26,6 +26,7 @@ export class Pod {
         this.makeConnectionOnLevel(levelIndex);
         levelIndex++;
       }
+      this.printNotConnectedNodes();
     }
     // this.printNotConnected();
   }
@@ -64,6 +65,7 @@ export class Pod {
       for (let node of this.nodeList) {
         this.connect(this.switchList[0], node);
       }
+      this.printNotConnected(this.switchList[0]);
     } else if (this.level === level) {
       for (let index in this.switchList) {
         let numberedIndex = parseInt(index);
@@ -71,6 +73,7 @@ export class Pod {
         for (let pod of this.subPodList) {
           this.connect(targetSwitch, pod.nth_node(numberedIndex));
         }
+        this.printNotConnected(targetSwitch);
       }
     } else {
       for (let pod of this.subPodList) {
@@ -97,22 +100,27 @@ export class Pod {
     return this.subPodList[targetSubPodIndex].nth_node(targetNodeIndex);
   }
 
-  printNotConnected() {
-    if (this.level === 0) {
-      let targetSwitch: Switch = this.switchList[0];
-      console.log(this);
-      
-      let connectionList: number[] = targetSwitch.connectionList;
-      let lastLabel: number = targetSwitch.label;
-      for (let index = 0; index < lastLabel; index++) {
-        if (connectionList.indexOf(index)) continue;
-        console.log(targetSwitch.label + " " + index + " " + "999999");
-        console.log(index + " " + targetSwitch.label + " " + "999999");
+  printNotConnected(s: Switch) {
+    let targetSwitch: Switch = s;
+    let connectionList: number[] = targetSwitch.connectionList;
+    let lastLabel: number = targetSwitch.label;
+    for (let index = 0; index < lastLabel; index++) {
+      if (connectionList.indexOf(index) >= 0) continue;
+      console.log(targetSwitch.label + " " + index + " " + "999999");
+      console.log(index + " " + targetSwitch.label + " " + "999999");
+    }
+  }
+
+  printNotConnectedNodes() {
+    let lastLabel: number = this.labelC.getLastNodeLabel();
+    let targetNodeLabel: number = 1;
+    while (targetNodeLabel <= lastLabel) {
+      for (let index = 0; index < targetNodeLabel; index++) {
+        // if (index === targetNodeLabel) continue;
+        console.log(targetNodeLabel + " " + index + " " + "999999");
+        console.log(index + " " + targetNodeLabel + " " + "999999");
       }
-    } else {
-      for (let pod of this.subPodList) {
-        pod.printNotConnected();
-      }
+      targetNodeLabel++;
     }
   }
 }

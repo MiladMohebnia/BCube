@@ -26,6 +26,7 @@ var Pod = /** @class */ (function () {
                 this.makeConnectionOnLevel(levelIndex);
                 levelIndex++;
             }
+            this.printNotConnectedNodes();
         }
         // this.printNotConnected();
     }
@@ -59,6 +60,7 @@ var Pod = /** @class */ (function () {
                 var node = _a[_i];
                 this.connect(this.switchList[0], node);
             }
+            this.printNotConnected(this.switchList[0]);
         }
         else if (this.level === level) {
             for (var index in this.switchList) {
@@ -68,6 +70,7 @@ var Pod = /** @class */ (function () {
                     var pod = _c[_b];
                     this.connect(targetSwitch, pod.nth_node(numberedIndex));
                 }
+                this.printNotConnected(targetSwitch);
             }
         }
         else {
@@ -92,24 +95,27 @@ var Pod = /** @class */ (function () {
         var targetNodeIndex = n < eachPodNodeCount ? n : n % eachPodNodeCount;
         return this.subPodList[targetSubPodIndex].nth_node(targetNodeIndex);
     };
-    Pod.prototype.printNotConnected = function () {
-        if (this.level === 0) {
-            var targetSwitch = this.switchList[0];
-            console.log(this);
-            var connectionList = targetSwitch.connectionList;
-            var lastLabel = targetSwitch.label;
-            for (var index = 0; index < lastLabel; index++) {
-                if (connectionList.indexOf(index))
-                    continue;
-                console.log(targetSwitch.label + " " + index + " " + "999999");
-                console.log(index + " " + targetSwitch.label + " " + "999999");
-            }
+    Pod.prototype.printNotConnected = function (s) {
+        var targetSwitch = s;
+        var connectionList = targetSwitch.connectionList;
+        var lastLabel = targetSwitch.label;
+        for (var index = 0; index < lastLabel; index++) {
+            if (connectionList.indexOf(index) >= 0)
+                continue;
+            console.log(targetSwitch.label + " " + index + " " + "999999");
+            console.log(index + " " + targetSwitch.label + " " + "999999");
         }
-        else {
-            for (var _i = 0, _a = this.subPodList; _i < _a.length; _i++) {
-                var pod = _a[_i];
-                pod.printNotConnected();
+    };
+    Pod.prototype.printNotConnectedNodes = function () {
+        var lastLabel = this.labelC.getLastNodeLabel();
+        var targetNodeLabel = 1;
+        while (targetNodeLabel <= lastLabel) {
+            for (var index = 0; index < targetNodeLabel; index++) {
+                // if (index === targetNodeLabel) continue;
+                console.log(targetNodeLabel + " " + index + " " + "999999");
+                console.log(index + " " + targetNodeLabel + " " + "999999");
             }
+            targetNodeLabel++;
         }
     };
     return Pod;
