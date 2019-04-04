@@ -28,7 +28,6 @@ export class Pod {
       }
       this.printNotConnectedNodes();
     }
-    // this.printNotConnected();
   }
 
   private createSubPods() {
