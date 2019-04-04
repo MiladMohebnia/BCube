@@ -116,7 +116,6 @@ export class Pod {
     let targetNodeLabel: number = 1;
     while (targetNodeLabel <= lastLabel) {
       for (let index = 0; index < targetNodeLabel; index++) {
-        // if (index === targetNodeLabel) continue;
         console.log(targetNodeLabel + " " + index + " " + "999999");
         console.log(index + " " + targetNodeLabel + " " + "999999");
       }
